@@ -1,10 +1,11 @@
 package com.maruf.mmusicplayer
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.maruf.mmusicplayer.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -12,18 +13,47 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    //enableEdgeToEdge()
+    // enableEdgeToEdge()
+    requestRuntimePermission()
     setTheme(R.style.Theme_MMusicPlayer)
     binding = ActivityMainBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    binding.shuffleBtn.setOnClickListener {
-      Toast.makeText(this@MainActivity, "a", Toast.LENGTH_SHORT).show()
-    }
     binding.apply {
-      shuffleBtn.setOnClickListener { startActivity(Intent(this@MainActivity, PlayerActivity::class.java)) }
-      playlistBtn.setOnClickListener { startActivity(Intent(this@MainActivity, PlaylistActivity::class.java)) }
-      favouriteBtn.setOnClickListener { startActivity(Intent(this@MainActivity, FavouriteActivity::class.java)) }
+      shuffleBtn.setOnClickListener {
+        startActivity(Intent(this@MainActivity, PlayerActivity::class.java))
+      }
+      playlistBtn.setOnClickListener {
+        startActivity(Intent(this@MainActivity, PlaylistActivity::class.java))
+      }
+      favouriteBtn.setOnClickListener {
+        startActivity(Intent(this@MainActivity, FavouriteActivity::class.java))
+      }
+    }
+  }
+
+  private fun requestRuntimePermission() {
+    if (ActivityCompat.checkSelfPermission(
+        this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+        PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(
+          this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 13)
+    }
+  }
+
+  override fun onRequestPermissionsResult(
+      requestCode: Int,
+      permissions: Array<out String>,
+      grantResults: IntArray
+  ) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    if (requestCode == 13) {
+      if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
+      }else{
+        ActivityCompat.requestPermissions(
+          this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 13)
+      }
     }
   }
 }
