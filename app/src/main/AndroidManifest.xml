@@ -13,7 +13,24 @@
         android:theme="@style/splash_screen_theme"
         tools:targetApi="31">
         <activity
+            android:name=".PlaylistActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FavouriteActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PlayerActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+        <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
