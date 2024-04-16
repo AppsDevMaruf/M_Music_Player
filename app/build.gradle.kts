@@ -40,6 +40,8 @@ dependencies {
   implementation(libs.androidx.activity)
   implementation(libs.androidx.constraintlayout)
   implementation(libs.swiperefreshlayout)
+  implementation(libs.imageloder.coil)
+  implementation(libs.imageloder.glide)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)

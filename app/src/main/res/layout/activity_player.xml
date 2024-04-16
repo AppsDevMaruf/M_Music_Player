@@ -57,11 +57,12 @@
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_margin="10dp"
-        android:padding="5dp"
+        android:padding="2dp"
         android:src="@drawable/music_player_icon_slash_screen"
         app:shapeAppearanceOverlay="@style/curved"
-        app:strokeColor="@color/cool_blue"
-        app:strokeWidth="5dp"/>
+        app:strokeColor="@color/cool_pink"
+        android:scaleType="centerCrop"
+        app:strokeWidth="2dp"/>
 
     <!--    Current Song Name-->
     <TextView
@@ -100,10 +101,12 @@
             android:layout_height="wrap_content"
             app:icon="@drawable/pause_icon"
             app:iconSize="50dp"
+            android:clickable="true"
             android:layout_marginHorizontal="25dp"
             app:shapeAppearanceOverlay="@style/curved"
             android:backgroundTint="@android:color/holo_red_light"
-            app:iconTint="@color/white"/>
+            app:iconTint="@color/white"
+            android:focusable="true" />
 
         <!--        Next Button-->
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

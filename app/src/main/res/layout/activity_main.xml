@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+
+
     tools:context=".MainActivity"
     tools:openDrawer="start">
 
@@ -27,64 +29,82 @@
 
                 <!--for buttons-->
                 <LinearLayout
-                    android:layout_marginTop="4dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginTop="4dp"
                     android:orientation="horizontal">
                     <!--shuffle Button-->
-                    <TextView
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/shuffleBtn"
-                        style="@style/TextSizeDynamicStyle"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:autoSizeTextType="uniform"
                         android:contentDescription="@string/shuffle_btn"
-                        android:gravity="center"
+                        android:gravity="start|center"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
                         android:text="@string/shuffle_btn"
                         android:textAllCaps="false"
                         android:textColor="@color/black"
-                        app:drawableTopCompat="@drawable/shuffle_icon" />
+                        app:drawableTopCompat="@drawable/shuffle_icon"
+                        tools:targetApi="o" />
                     <!--Favourites Button-->
-                    <TextView
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/favouriteBtn"
-                        style="@style/TextSizeDynamicStyle"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:autoSizeTextType="uniform"
+
                         android:contentDescription="@string/favourites_btn"
-                        android:gravity="center"
+                        android:gravity="start|center"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+
                         android:text="@string/favourites_btn"
                         android:textAllCaps="false"
                         android:textColor="@color/black"
-                        app:drawableTopCompat="@drawable/favourite_icon" />
+                        app:drawableTopCompat="@drawable/favourite_icon"
+                        tools:targetApi="o" />
                     <!--Playlists Button-->
-                    <TextView
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/playlistBtn"
-                        style="@style/TextSizeDynamicStyle"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:autoSizeTextType="uniform"
                         android:contentDescription="@string/playlist_btn"
-                        android:gravity="center"
+                        android:gravity="start|center"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
                         android:text="@string/playlist_btn"
                         android:textAllCaps="false"
                         android:textColor="@color/black"
-                        app:drawableTopCompat="@drawable/playlist_icon" />
+                        app:drawableTopCompat="@drawable/playlist_icon"
+                        tools:targetApi="o" />
 
                     <!--Play Next Button-->
-                    <TextView
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:maxLines="1"
+                        android:gravity="start|center"
+                        android:includeFontPadding="false"
+                        android:autoSizeTextType="uniform"
                         android:id="@+id/playNextBtn"
-                        style="@style/TextSizeDynamicStyle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:contentDescription="@string/playlist_btn"
-                        android:gravity="center"
                         android:text="@string/play_next"
                         android:textAllCaps="false"
                         android:textColor="@color/black"
-                        app:drawableTopCompat="@drawable/play_next_icon" />
+                        app:drawableTopCompat="@drawable/play_next_icon"
+                        tools:targetApi="o" />
 
                 </LinearLayout>
 
@@ -99,6 +119,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/musicRV"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbarThumbVertical="@drawable/scroll_bar_icon"

@@ -8,9 +8,9 @@ class PlaylistActivity : AppCompatActivity() {
   private lateinit var binding:ActivityPlaylistBinding
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setTheme(R.style.Theme_MMusicPlayer)
+    setTheme(R.style.coolPink)
     binding = ActivityPlaylistBinding.inflate(layoutInflater)
-    setContentView(R.layout.activity_playlist)
+    setContentView(binding.root)
 
   }
 }

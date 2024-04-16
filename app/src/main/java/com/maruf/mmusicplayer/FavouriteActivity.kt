@@ -8,8 +8,8 @@ class FavouriteActivity : AppCompatActivity() {
   private lateinit var binding: ActivityFavouriteBinding
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setTheme(R.style.Theme_MMusicPlayer)
+    setTheme(R.style.coolPink)
     binding = ActivityFavouriteBinding.inflate(layoutInflater)
-    setContentView(R.layout.activity_favourite)
+    setContentView(binding.root)
   }
 }
