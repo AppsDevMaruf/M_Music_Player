@@ -42,6 +42,7 @@ dependencies {
   implementation(libs.swiperefreshlayout)
   implementation(libs.imageloder.coil)
   implementation(libs.imageloder.glide)
+  implementation(libs.media)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)

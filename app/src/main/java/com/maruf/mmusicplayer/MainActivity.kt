@@ -1,19 +1,27 @@
 package com.maruf.mmusicplayer
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore.Audio.Media
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maruf.mmusicplayer.adapter.MusicAdapter
 import com.maruf.mmusicplayer.data.Music
 import com.maruf.mmusicplayer.databinding.ActivityMainBinding
+import com.maruf.mmusicplayer.util.Utils.exitApplication
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -23,14 +31,16 @@ class MainActivity : AppCompatActivity() {
 
   companion object {
     lateinit var MusicListMA: ArrayList<Music>
+    lateinit var musicListSearch: ArrayList<Music>
+    var search: Boolean = false
     var sortOrder: Int = 0
     val sortingList = arrayOf(Media.DATE_ADDED + " DESC", Media.TITLE, Media.SIZE + " DESC")
   }
 
+  @RequiresApi(Build.VERSION_CODES.TIRAMISU)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     // enableEdgeToEdge()
-    requestRuntimePermission()
     setTheme(R.style.coolPinkNav)
     binding = ActivityMainBinding.inflate(layoutInflater)
     setContentView(binding.root)
@@ -40,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     toggle.syncState()
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
     supportActionBar?.show()
-    if (requestRuntimePermission()) initializeLayout()
+    if (requestRuntimePermissions()) initializeLayout()
 
     binding.apply {
       shuffleBtn.setOnClickListener {
@@ -55,12 +65,34 @@ class MainActivity : AppCompatActivity() {
       favouriteBtn.setOnClickListener {
         startActivity(Intent(this@MainActivity, FavouriteActivity::class.java))
       }
+      binding.navView.setNavigationItemSelectedListener {
+        when (it.itemId) {
+          R.id.navView -> Toast.makeText(this@MainActivity, "Setting", Toast.LENGTH_SHORT).show()
+          R.id.navSettings ->
+              Toast.makeText(this@MainActivity, "Setting", Toast.LENGTH_SHORT).show()
+          R.id.navAbout -> Toast.makeText(this@MainActivity, "About", Toast.LENGTH_SHORT).show()
+          R.id.navExit -> {
+            val build = MaterialAlertDialogBuilder(this@MainActivity)
+            build
+                .setTitle("Exit")
+                .setMessage("Do you want to close app?")
+                .setPositiveButton("Yes") { _, _ -> exitApplication() }
+                .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
+            val customDialog = build.create()
+            customDialog.show()
+            customDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
+            customDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
+          }
+        }
+        true
+      }
     }
   }
 
   @SuppressLint("StringFormatMatches")
   private fun initializeLayout() {
     // adapter initialize
+    search = false
     MusicListMA = getAllAudio()
     musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
     binding.musicRV.apply {
@@ -71,12 +103,20 @@ class MainActivity : AppCompatActivity() {
     binding.totalSongs.text = getString(R.string.total_songs_count, musicAdapter.itemCount)
   }
 
-  private fun requestRuntimePermission(): Boolean {
+  @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+  private fun requestRuntimePermissions(): Boolean {
+    val permissionsToRequest = mutableListOf<String>()
     if (ActivityCompat.checkSelfPermission(
         this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
         PackageManager.PERMISSION_GRANTED) {
-      ActivityCompat.requestPermissions(
-          this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 13)
+      permissionsToRequest.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    }
+    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) !=
+        PackageManager.PERMISSION_GRANTED) {
+      permissionsToRequest.add(android.Manifest.permission.POST_NOTIFICATIONS)
+    }
+    if (permissionsToRequest.isNotEmpty()) {
+      ActivityCompat.requestPermissions(this, permissionsToRequest.toTypedArray(), 13)
       return false
     }
     return true
@@ -89,12 +129,19 @@ class MainActivity : AppCompatActivity() {
   ) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     if (requestCode == 13) {
-      if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
+      var allPermissionsGranted = true
+      for (result in grantResults) {
+        if (result != PackageManager.PERMISSION_GRANTED) {
+          allPermissionsGranted = false
+          break
+        }
+      }
+      if (allPermissionsGranted) {
+        Toast.makeText(this, "Permissions Granted", Toast.LENGTH_SHORT).show()
         initializeLayout()
       } else {
-        ActivityCompat.requestPermissions(
-            this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 13)
+        Toast.makeText(this, "Permissions Denied", Toast.LENGTH_SHORT).show()
+        // Optionally handle re-requesting or showing an explanation to the user
       }
     }
   }
@@ -151,5 +198,36 @@ class MainActivity : AppCompatActivity() {
       cursor.close()
     }
     return tempList
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    if (!PlayerActivity.isSongPlaying && PlayerActivity.musicService != null) {
+      exitApplication()
+    }
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    menuInflater.inflate(R.menu.search_view_menu, menu)
+    val searchView = menu?.findItem(R.id.searchView)?.actionView as SearchView
+    searchView.setOnQueryTextListener(
+        object : SearchView.OnQueryTextListener {
+          override fun onQueryTextSubmit(query: String?): Boolean = true
+
+          override fun onQueryTextChange(newText: String?): Boolean {
+            musicListSearch = ArrayList()
+            if (newText != null) {
+              val userInput = newText.lowercase()
+              for (song in MusicListMA) {
+                if (song.title.lowercase().contains(userInput)) musicListSearch.add(song)
+                search = true
+                musicAdapter.updateMusicList(musicListSearch)
+              }
+            }
+            return true
+          }
+        })
+
+    return super.onCreateOptionsMenu(menu)
   }
 }

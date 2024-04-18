@@ -1,5 +1,6 @@
 package com.maruf.mmusicplayer.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -9,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.maruf.mmusicplayer.MainActivity
 import com.maruf.mmusicplayer.PlayerActivity
 import com.maruf.mmusicplayer.R
 import com.maruf.mmusicplayer.data.Music
@@ -39,15 +41,28 @@ class MusicAdapter(private val context: Context, private var musicList: ArrayLis
         transformations(CircleCropTransformation())
       }
       root.setOnClickListener {
-        val intent = Intent(context, PlayerActivity::class.java)
-        intent.putExtra("index",position)
-        intent.putExtra("class","MusicAdapter")
-        ContextCompat.startActivity(context, intent, null)
+        when{
+          MainActivity.search-> sendIntent("MusicAdapterSearch",position)
+          else-> sendIntent("MusicAdapter", pos = position)
+        }
+
       }
     }
   }
 
   override fun getItemCount(): Int {
     return musicList.size
+  }
+  @SuppressLint("NotifyDataSetChanged")
+  fun updateMusicList(searchList:ArrayList<Music>){
+    musicList = ArrayList()
+    musicList.addAll(searchList)
+    notifyDataSetChanged()
+  }
+  private fun sendIntent(ref:String,pos:Int){
+    val intent = Intent(context, PlayerActivity::class.java)
+    intent.putExtra("index",pos)
+    intent.putExtra("class",ref)
+    ContextCompat.startActivity(context, intent, null)
   }
 }
