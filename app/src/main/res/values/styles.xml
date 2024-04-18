@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="TextSizeDynamicStyle">
+        <item name="android:maxLines">1</item>
+        <item name="android:gravity">start|center</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="autoSizeTextType">uniform</item>
+    </style>
+</resources>
