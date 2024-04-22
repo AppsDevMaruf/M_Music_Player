@@ -90,16 +90,16 @@
 
                     <!--Play Next Button-->
                     <com.google.android.material.button.MaterialButton
-                        style="@style/Widget.AppCompat.Button.Borderless"
-                        android:maxLines="1"
-                        android:gravity="start|center"
-                        android:includeFontPadding="false"
-                        android:autoSizeTextType="uniform"
                         android:id="@+id/playNextBtn"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:autoSizeTextType="uniform"
                         android:contentDescription="@string/playlist_btn"
+                        android:gravity="start|center"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
                         android:text="@string/play_next"
                         android:textAllCaps="false"
                         android:textColor="@color/black"
@@ -119,24 +119,23 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/musicRV"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
-                    android:scrollbars="vertical" />
+                    android:scrollbars="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             </LinearLayout>
 
-            <!--  <androidx.fragment.app.FragmentContainerView
-                  android:id="@+id/nowPlaying"
-                  android:name="com.harshRajpurohit.musicPlayer.NowPlaying"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:visibility="gone"
-                  app:layout_constraintBottom_toBottomOf="parent"
-                  app:layout_constraintEnd_toEndOf="parent"
-                  app:layout_constraintStart_toStartOf="parent"
-                  tools:layout="@layout/fragment_now_playing" />-->
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/nowPlaying"
+                android:name="com.maruf.mmusicplayer.NowPlayingFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout="@layout/fragment_now_playing" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
