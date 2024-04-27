@@ -28,6 +28,7 @@ import com.maruf.mmusicplayer.util.Utils
 import com.maruf.mmusicplayer.util.Utils.exitApplication
 import com.maruf.mmusicplayer.util.Utils.favouriteChecker
 import com.maruf.mmusicplayer.util.Utils.formatDuration
+import okhttp3.internal.notify
 import java.util.Timer
 import java.util.TimerTask
 
@@ -49,6 +50,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
     var fIndex: Int = -1
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setTheme(R.style.coolPink)
@@ -133,11 +135,13 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         if (isFavourite){
           isFavourite = false
           binding.favouriteBtnPA.setImageResource(R.drawable.favourite_empty_icon)
-          FavouriteActivity.favouriteSong.removeAt(fIndex)
+          FavouriteActivity.favouriteSongs.removeAt(fIndex)
+          FavouriteActivity.favouriteAdapter.notifyDataSetChanged()
         }else{
           isFavourite = true
           binding.favouriteBtnPA.setImageResource(R.drawable.favourite_icon)
-          FavouriteActivity.favouriteSong.add(musicListPA[songPosition])
+          FavouriteActivity.favouriteSongs.add(musicListPA[songPosition])
+          FavouriteActivity.favouriteAdapter.notifyDataSetChanged()
         }
       }
 
@@ -155,10 +159,16 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
   private fun initializeLayout() {
     songPosition = intent.getIntExtra("index", 0)
     when (intent.getStringExtra("class")) {
-      "FavouriteAdapter" -> {
+      "FavouriteShuffle" -> {
         startService()
         musicListPA = ArrayList()
-        musicListPA.addAll(FavouriteActivity.favouriteSong)
+        musicListPA.addAll(FavouriteActivity.favouriteSongs)
+        musicListPA.shuffle()
+        setLayout()
+      }"FavouriteAdapter" -> {
+        startService()
+        musicListPA = ArrayList()
+        musicListPA.addAll(FavouriteActivity.favouriteSongs)
         setLayout()
       }
       "NowPlaying" -> {

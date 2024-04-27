@@ -2,7 +2,10 @@ package com.maruf.mmusicplayer.util
 
 import android.annotation.SuppressLint
 import android.app.Service
+import android.content.Context
+import android.content.Intent
 import android.media.MediaMetadataRetriever
+import androidx.core.content.ContextCompat.startActivity
 import com.maruf.mmusicplayer.FavouriteActivity
 import com.maruf.mmusicplayer.PlayerActivity
 import java.util.concurrent.TimeUnit
@@ -48,13 +51,20 @@ object Utils {
   }
 
   fun favouriteChecker(id: String): Int {
-    PlayerActivity.isFavourite =false
-    FavouriteActivity.favouriteSong.forEachIndexed { index, music ->
+    PlayerActivity.isFavourite = false
+    FavouriteActivity.favouriteSongs.forEachIndexed { index, music ->
       if (id == music.id) {
         PlayerActivity.isFavourite = true
         return index
       }
     }
     return -1
+  }
+
+  fun sendIntent(context: Context, ref: String, pos: Int) {
+    val intent = Intent(context, PlayerActivity::class.java)
+    intent.putExtra("index", pos)
+    intent.putExtra("class", ref)
+    startActivity(context, intent, null)
   }
 }

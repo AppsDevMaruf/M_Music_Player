@@ -78,6 +78,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:text="@string/favourite_note"
         android:textSize="20sp"
+        android:alpha="0.2"
         android:padding="16dp"
         android:gravity="center"
         android:textColor="@color/cool_pink"

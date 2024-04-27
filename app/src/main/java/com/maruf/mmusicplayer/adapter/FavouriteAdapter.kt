@@ -1,5 +1,6 @@
 package com.maruf.mmusicplayer.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -10,10 +11,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.maruf.mmusicplayer.FavouriteActivity
 import com.maruf.mmusicplayer.PlayerActivity
 import com.maruf.mmusicplayer.R
 import com.maruf.mmusicplayer.data.Music
 import com.maruf.mmusicplayer.databinding.FavouriteViewBinding
+import com.maruf.mmusicplayer.util.Utils.sendIntent
 
 class FavouriteAdapter(private val context: Context, private var musicList: ArrayList<Music>) :
     RecyclerView.Adapter<FavouriteAdapter.MyHolder>() {
@@ -25,8 +28,10 @@ class FavouriteAdapter(private val context: Context, private var musicList: Arra
     return MyHolder(binding)
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   override fun onBindViewHolder(holder: MyHolder, position: Int) {
     holder.binding.apply {
+
       songNameFV.text = musicList[position].title
       songImgFV.load(musicList[position].artUri) {
         crossfade(true)
@@ -35,7 +40,7 @@ class FavouriteAdapter(private val context: Context, private var musicList: Arra
         transformations(CircleCropTransformation())
       }
       root.setOnClickListener {
-        sendIntent("FavouriteAdapter",position)
+        sendIntent(context,"FavouriteAdapter",position)
       }
     }
   }
@@ -44,10 +49,5 @@ class FavouriteAdapter(private val context: Context, private var musicList: Arra
     return musicList.size
   }
 
-  private fun sendIntent(ref: String, pos: Int) {
-    val intent = Intent(context, PlayerActivity::class.java)
-    intent.putExtra("index", pos)
-    intent.putExtra("class", ref)
-    ContextCompat.startActivity(context, intent, null)
-  }
+
 }

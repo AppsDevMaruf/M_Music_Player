@@ -18,12 +18,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.maruf.mmusicplayer.adapter.MusicAdapter
 import com.maruf.mmusicplayer.data.Music
 import com.maruf.mmusicplayer.databinding.ActivityMainBinding
 import com.maruf.mmusicplayer.util.Utils.exitApplication
 import java.io.File
 
+@Suppress("UNCHECKED_CAST")
 class MainActivity : AppCompatActivity() {
   private lateinit var binding: ActivityMainBinding
   private lateinit var toggle: ActionBarDrawerToggle
@@ -51,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
     supportActionBar?.show()
     if (requestRuntimePermissions()) initializeLayout()
-
+    retrievingFavouriteSongs()
     binding.apply {
       shuffleBtn.setOnClickListener {
         val intent = Intent(this@MainActivity, PlayerActivity::class.java)
@@ -206,6 +210,31 @@ class MainActivity : AppCompatActivity() {
       exitApplication()
     }
   }
+
+  override fun onResume() {
+    super.onResume()
+    storingFavouriteSongs()
+  }
+  //for storing favourites data using share preference
+  private fun storingFavouriteSongs(){
+    val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
+    val json = GsonBuilder().create().toJson(FavouriteActivity.favouriteSongs)
+    editor.putString("FavouriteSongs",json)
+    editor.apply()
+  }
+  private fun retrievingFavouriteSongs(){
+    FavouriteActivity.favouriteSongs.clear()
+    val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE)
+    val jsonString = editor.getString("FavouriteSongs",null)
+    if (jsonString != null) {
+      val type = object : TypeToken<ArrayList<Music>>() {}.type
+      val data: ArrayList<Music> = Gson().fromJson(jsonString, type)
+      FavouriteActivity.favouriteSongs.addAll(data)
+    }
+
+  }
+
+
 
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
     menuInflater.inflate(R.menu.search_view_menu, menu)
