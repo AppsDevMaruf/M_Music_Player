@@ -100,6 +100,7 @@ class MusicService : Service() {
           progress = 0
           max = mediaPlayer?.duration!!
         }
+          PlayerActivity.nowPlayingId = PlayerActivity.musicListPA[PlayerActivity.songPosition].id
       }
     } catch (e: Exception) {
       return

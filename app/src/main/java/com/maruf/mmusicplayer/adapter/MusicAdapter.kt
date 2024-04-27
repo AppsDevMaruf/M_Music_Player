@@ -2,11 +2,9 @@ package com.maruf.mmusicplayer.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -16,6 +14,7 @@ import com.maruf.mmusicplayer.R
 import com.maruf.mmusicplayer.data.Music
 import com.maruf.mmusicplayer.databinding.MusicViewBinding
 import com.maruf.mmusicplayer.util.Utils.formatDuration
+import com.maruf.mmusicplayer.util.Utils.sendIntent
 
 class MusicAdapter(private val context: Context, private var musicList: ArrayList<Music>) :
     RecyclerView.Adapter<MusicAdapter.MyHolder>() {
@@ -42,8 +41,11 @@ class MusicAdapter(private val context: Context, private var musicList: ArrayLis
       }
       root.setOnClickListener {
         when{
-          MainActivity.search-> sendIntent("MusicAdapterSearch",position)
-          else-> sendIntent("MusicAdapter", pos = position)
+          MainActivity.search-> sendIntent(context,"MusicAdapterSearch",position)
+          musicList[position].id==PlayerActivity.nowPlayingId-> sendIntent(context,"NowPlaying",PlayerActivity.songPosition)
+
+
+          else-> sendIntent(context,"MusicAdapter", pos = position)
         }
 
       }
@@ -59,10 +61,5 @@ class MusicAdapter(private val context: Context, private var musicList: ArrayLis
     musicList.addAll(searchList)
     notifyDataSetChanged()
   }
-  private fun sendIntent(ref:String,pos:Int){
-    val intent = Intent(context, PlayerActivity::class.java)
-    intent.putExtra("index",pos)
-    intent.putExtra("class",ref)
-    ContextCompat.startActivity(context, intent, null)
-  }
+
 }

@@ -1,6 +1,5 @@
 package com.maruf.mmusicplayer
 
-import android.app.Service.STOP_FOREGROUND_REMOVE
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -8,8 +7,8 @@ import coil.load
 import com.maruf.mmusicplayer.PlayerActivity.Companion.binding
 import com.maruf.mmusicplayer.PlayerActivity.Companion.musicService
 import com.maruf.mmusicplayer.util.Utils.exitApplication
+import com.maruf.mmusicplayer.util.Utils.favouriteChecker
 import com.maruf.mmusicplayer.util.Utils.setSongPosition
-import kotlin.system.exitProcess
 
 class NotificationReceiver : BroadcastReceiver() {
   override fun onReceive(content: Context?, intent: Intent?) {
@@ -29,6 +28,7 @@ class NotificationReceiver : BroadcastReceiver() {
       musicService?.mediaPlayer?.start()
       musicService?.showNotification(R.drawable.pause_icon)
       binding.playPauseBtnPA.setIconResource(R.drawable.pause_icon)
+      NowPlayingFragment.binding.playPauseBtnNP.setIconResource(R.drawable.pause_icon)
     }
   }
 
@@ -38,6 +38,7 @@ class NotificationReceiver : BroadcastReceiver() {
       musicService?.mediaPlayer?.pause()
       musicService?.showNotification(R.drawable.play_icon)
       binding.playPauseBtnPA.setIconResource(R.drawable.play_icon)
+      NowPlayingFragment.binding.playPauseBtnNP.setIconResource(R.drawable.play_icon)
     }
   }
 
@@ -52,7 +53,15 @@ class NotificationReceiver : BroadcastReceiver() {
       error(R.mipmap.ic_music_player_icon)
     }
     binding.songNamePA.text = PlayerActivity.musicListPA[PlayerActivity.songPosition].title
-
+    NowPlayingFragment.binding.songImgNP.load(PlayerActivity.musicListPA[PlayerActivity.songPosition].artUri) {
+      crossfade(true)
+      placeholder(R.mipmap.ic_music_player_icon)
+      error(R.mipmap.ic_music_player_icon)
+    }
+    NowPlayingFragment.binding.songNameNP.text = PlayerActivity.musicListPA[PlayerActivity.songPosition].title
     playMusic()
+    PlayerActivity.fIndex = favouriteChecker(PlayerActivity.musicListPA[PlayerActivity.songPosition].id)
+    if (PlayerActivity.isFavourite) binding.favouriteBtnPA.setImageResource(R.drawable.favourite_icon)
+    else binding.favouriteBtnPA.setImageResource(R.drawable.favourite_empty_icon)
   }
 }

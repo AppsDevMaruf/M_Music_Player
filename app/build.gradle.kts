@@ -41,8 +41,10 @@ dependencies {
   implementation(libs.androidx.constraintlayout)
   implementation(libs.swiperefreshlayout)
   implementation(libs.imageloder.coil)
-  implementation(libs.imageloder.glide)
+  // Gson
+  implementation(libs.gson)
   implementation(libs.media)
+
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
