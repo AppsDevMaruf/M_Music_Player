@@ -1,10 +1,12 @@
 package com.maruf.mmusicplayer
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import coil.load
 import com.maruf.mmusicplayer.databinding.FragmentNowPlayingBinding
@@ -30,6 +32,12 @@ class NowPlayingFragment : Fragment() {
     binding.nextBtnNP.setOnClickListener {
       nextMusic()
     }
+    binding.root.setOnClickListener {
+      val intent = Intent(requireContext(), PlayerActivity::class.java)
+      intent.putExtra("index",PlayerActivity.songPosition)
+      intent.putExtra("class","NowPlaying")
+      ContextCompat.startActivity(requireContext(), intent, null)
+    }
     return view
   }
 
@@ -37,6 +45,7 @@ class NowPlayingFragment : Fragment() {
     super.onResume()
     if (PlayerActivity.musicService != null) {
       binding.root.visibility = View.VISIBLE
+      binding.songNameNP.isSelected = true
       binding.songImgNP.load(PlayerActivity.musicListPA[PlayerActivity.songPosition].artUri) {
         crossfade(true)
         placeholder(R.mipmap.ic_music_player_icon)

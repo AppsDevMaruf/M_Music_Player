@@ -7,6 +7,7 @@ import coil.load
 import com.maruf.mmusicplayer.PlayerActivity.Companion.binding
 import com.maruf.mmusicplayer.PlayerActivity.Companion.musicService
 import com.maruf.mmusicplayer.util.Utils.exitApplication
+import com.maruf.mmusicplayer.util.Utils.favouriteChecker
 import com.maruf.mmusicplayer.util.Utils.setSongPosition
 
 class NotificationReceiver : BroadcastReceiver() {
@@ -58,7 +59,9 @@ class NotificationReceiver : BroadcastReceiver() {
       error(R.mipmap.ic_music_player_icon)
     }
     NowPlayingFragment.binding.songNameNP.text = PlayerActivity.musicListPA[PlayerActivity.songPosition].title
-
     playMusic()
+    PlayerActivity.fIndex = favouriteChecker(PlayerActivity.musicListPA[PlayerActivity.songPosition].id)
+    if (PlayerActivity.isFavourite) binding.favouriteBtnPA.setImageResource(R.drawable.favourite_icon)
+    else binding.favouriteBtnPA.setImageResource(R.drawable.favourite_empty_icon)
   }
 }
